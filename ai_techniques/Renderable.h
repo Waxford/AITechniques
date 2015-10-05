@@ -7,6 +7,8 @@
 
 class Renderable : public Behaviour
 {
+protected:
+	GLuint vertexbuffer;
 public:
 	int depth;
 	float x;
