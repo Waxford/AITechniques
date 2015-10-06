@@ -2,6 +2,7 @@
 #include "Dependencies\freeglut\freeglut.h"
 #include "BehaviourDirector.h"
 #include "Triangle.h"
+#include "Time.h"
 #include <iostream>
 #include <stdio.h>;
 #include<stdlib.h>;
@@ -14,12 +15,25 @@ using namespace Core;
 
 GLuint program;
 
+Triangle* t1;
+Triangle* t2;
+
 void renderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 
 	glUseProgram(program);
+
+	float time = Time::GetTime();
+
+	t1->x = sinf(time*4.0f)*0.4f;
+	t1->y = sinf(time*6.0f)*0.3f;
+	t1->rotation = time*650.0f;
+
+	t2->x = sinf(time*5.0f)*0.2f;
+	t2->y = sinf(time*7.0f)*0.25f;
+	t2->rotation = time*350.0f;
 
 	BehaviourDirector::Tick();
 
@@ -35,7 +49,8 @@ void Init()
 	Core::Shader_Loader shaderLoader;
 	program = shaderLoader.CreateProgram("Vertex_Shader.glsl", "Fragment_Shader.glsl");
 
-	Triangle* t = new Triangle();
+	t1 = new Triangle();
+	t2 = new Triangle();
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

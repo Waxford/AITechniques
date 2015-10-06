@@ -23,18 +23,10 @@ void Triangle::Update()
 {
 	Renderable::Update(); 
 
-	float time = Time::GetTime();
-
-	//x = sinf(time*4.0f)*0.2f;
-	x = sinf(time*4.0f)*0.4f;
-	y = sinf(time*6.0f)*0.3f;
-	rotation = time*250.0f;
 	glPushMatrix();
 	glLoadIdentity();
 	glTranslatef(x, y, 0.0f);
-
 	glRotatef(rotation, 0.0f, 0.0f, 1.0f);
-	//glTranslatef(x, y, 0.0f);
 
 	// The following commands will talk about our 'vertexbuffer' buffer
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
