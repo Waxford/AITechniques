@@ -30,10 +30,13 @@ void renderScene(void)
 	t1->x = sinf(time*4.0f)*0.4f;
 	t1->y = sinf(time*6.0f)*0.3f;
 	t1->rotation = time*650.0f;
+	t1->scaleX = sinf(time*2.0f) + 1.5f;
 
-	t2->x = sinf(time*5.0f)*0.2f;
-	t2->y = sinf(time*7.0f)*0.25f;
-	t2->rotation = time*350.0f;
+	t2->x = sinf(time*2.0f)*0.2f;
+	t2->y = sinf(time*3.0f)*0.25f;
+	t2->rotation = time*50.0f;
+	t2->scaleX = sinf(time) + 1.2f;
+	t2->scaleY = sinf(time*3.0f)*2 + 2.5f;
 
 	BehaviourDirector::Tick();
 

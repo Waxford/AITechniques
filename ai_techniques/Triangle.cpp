@@ -27,6 +27,7 @@ void Triangle::Update()
 	glLoadIdentity();
 	glTranslatef(x, y, 0.0f);
 	glRotatef(rotation, 0.0f, 0.0f, 1.0f);
+	glScalef(scaleX, scaleY, 0.0f);
 
 	// The following commands will talk about our 'vertexbuffer' buffer
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
