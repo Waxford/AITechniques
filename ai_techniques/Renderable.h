@@ -3,6 +3,7 @@
 #include "Dependencies\glew\glew.h"
 #include "Dependencies\freeglut\freeglut.h"
 #include <iostream>
+#include <vector>
 #include "Behaviour.h"
 
 class Renderable : public Behaviour
@@ -16,11 +17,13 @@ public:
 	float rotation;
 	float scaleX;
 	float scaleY;
-	GLuint shader;
+	GLuint shader; 
+	std::vector<GLfloat> vertexBufferData;
 
 	Renderable(void);
 	~Renderable(void);
 
+	void SetVertices(std::vector<GLfloat>* newVertexBufferData);
 	void SetColor(float r, float g, float b, float a);
 
 	void Update();

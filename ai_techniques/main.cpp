@@ -13,6 +13,7 @@
 
 using namespace Core;
 
+Renderable* r;
 Triangle* t1;
 Triangle* t2;
 Triangle* t3;
@@ -36,22 +37,19 @@ void renderScene(void)
 	t2->scaleX = sinf(time) + 1.2f;
 	t2->scaleY = sinf(time*3.0f)*2 + 2.5f;*/
 
-	t1->rotation = time * 100.0f;
+	r->rotation = time * 200.0f;
+
+	t1->rotation = 0.0f + time * 100.0f;
 	t1->y = 0.75f;
-	t1->scaleX = sinf(time) + 1.2f;
-	t1->scaleY = sinf(time*1.1f) + 1.2f;
 
-	t2->rotation = 90.0f;
+	t2->rotation = 90.0f + time * 100.0f;
 	t2->y = 0.25f;
-	t2->x = sinf(time*2.0f)*0.3f;
 
-	t3->rotation = 180.0f;
+	t3->rotation = 180.0f + time * 100.0f;
 	t3->y = -0.25f;
-	t3->x = sinf(time*2.0f)*0.5f;
 
-	t4->rotation = 270.0f;
+	t4->rotation = 270.0f + time * 100.0f;
 	t4->y = -0.75f;
-	t4->x = sinf(time*2.0f)*0.7f;
 
 	BehaviourDirector::Tick();
 
@@ -68,6 +66,19 @@ void Init()
 	//program = shaderLoader.CreateProgram("Vertex_Shader.glsl", "Fragment_Shader.glsl");
 
 	glutSetColor(0, 1, 0, 0);
+
+	r = new Renderable();
+	GLfloat rArray[] = {
+		-0.05f, -0.05f, 0.0f,
+		0.05f, -0.05f, 0.0f,
+		-0.05f, 0.05f, 0.0f,
+		-0.05f, 0.05f, 0.0f,
+		0.05f, -0.05f, 0.0f,
+		0.05f, 0.05f, 0.0f,
+	};
+	std::vector<GLfloat> rVerts(rArray, rArray + sizeof(rArray) / sizeof(rArray[0]));
+	r->SetVertices(&rVerts);
+	r->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 	t1 = new Triangle();
 	t1->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
