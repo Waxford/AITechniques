@@ -5,9 +5,6 @@
 
 using namespace Core;
 
-Shader_Loader::Shader_Loader(void) {}
-Shader_Loader::~Shader_Loader(void) {}
-
 std::string Shader_Loader::ReadShader(char *filename)
 {
 	std::string shaderCode;

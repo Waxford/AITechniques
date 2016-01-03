@@ -16,9 +16,12 @@ public:
 	float rotation;
 	float scaleX;
 	float scaleY;
+	GLuint shader;
 
 	Renderable(void);
 	~Renderable(void);
+
+	void SetColor(float r, float g, float b, float a);
 
 	void Update();
 };

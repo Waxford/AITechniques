@@ -1,7 +1,12 @@
 #version 430 core
 
-layout(location = 0) in vec3 vertexPosition_modelspace;
+layout(std140 uniform Matrices{
+	mat4 pvm;
+};
+
+in vec4 position;
+
 void main(void)
 {
-    gl_Position.xyz = vec4(vertexPosition_modelspace, 1.0);
+    gl_Position = pvm * position;
 }
