@@ -21,11 +21,7 @@ std::vector<Renderable*> grid;
 void renderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.5, 0.5, 0.5, 1.0);
-
-	float time = Time::GetTime();
-
-	p->SetColor(sin(time) * 0.5f + 0.5f, sin(time*1.1f) * 0.5f + 0.5f, sin(time*1.5f) * 0.5f + 0.5f, 1.0f);
+	glClearColor(0.8, 0.8, 0.3, 1.0);
 
 	BehaviourDirector::Tick();
 
@@ -55,12 +51,16 @@ void Init()
 
 	p = new Pather();
 	p->SetVertices(&walkerVerts);
-	p->SetColor(0.0f, 1.0f, 1.0f, 1.0f);
-	p->AddDestination(0.4f, -0.4f, 0.01f);
-	p->AddDestination(0.4f, 0.4f, 0.01f);
-	p->AddDestination(-0.4f, 0.4f, 0.01f);
-	p->AddDestination(-0.4f, -0.4f, 0.01f);
-	p->AddDestination(0.4f, -0.4f, 0.01f);
+	p->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+	for(int i = 0; i < 10; ++i)
+	{
+		p->AddDestination(static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * 2 - 1, static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * 2 - 1, 0.01);
+	}
+	//p->AddDestination(0.4f, -0.4f, 0.01f);
+	//p->AddDestination(0.4f, 0.4f, 0.01f);
+	//p->AddDestination(-0.4f, 0.4f, 0.01f);
+	//p->AddDestination(-0.4f, -0.4f, 0.01f);
+	//p->AddDestination(0.4f, -0.4f, 0.01f);
 	
 	GLfloat squareArray[] = {
 		-0.05f, -0.05f, 0.0f,
@@ -78,8 +78,8 @@ void Init()
 			gridTile->SetVertices(&squareVerts);
 			gridTile->x = (i - 4.5f) / 5.0f;
 			gridTile->y = (j - 4.5f) / 5.0f;
-			gridTile->scaleX = 1.9f;
-			gridTile->scaleY = 1.9f;
+			gridTile->scaleX = 1.95f;
+			gridTile->scaleY = 1.95f;
 			gridTile->SetColor(0.0f, 0.0f, 0.0f, 1.0f);
 			grid.push_back(gridTile);
 		}

@@ -1,10 +1,15 @@
-﻿Build started 1/5/2016 8:48:19 PM.
+﻿Build started 1/5/2016 8:56:12 PM.
      1>Project "C:\Users\Coder\Documents\AITechniques\ai_techniques\ai_techniques.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /Od /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc110.pdb" /Gd /TP /errorReport:prompt Renderable.cpp
-         Renderable.cpp
-     1>Renderable.cpp(60): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
-     1>Renderable.cpp(95): warning C4267: 'argument' : conversion from 'size_t' to 'GLsizei', possible loss of data
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /Od /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc110.pdb" /Gd /TP /errorReport:prompt main.cpp
+         main.cpp
+     1>main.cpp(7): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+     1>main.cpp(8): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+     1>main.cpp(9): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+     1>main.cpp(10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+     1>main.cpp(11): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+     1>main.cpp(24): warning C4305: 'argument' : truncation from 'double' to 'GLclampf'
+     1>main.cpp(57): warning C4305: 'argument' : truncation from 'double' to 'float'
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Coder\Documents\AITechniques\x64\Debug\ai_techniques.exe" /INCREMENTAL /NOLOGO /LIBPATH:"Dependencies/freeglut,Dependencies/glew" opengl32.lib freeglut.lib glew32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Coder\Documents\AITechniques\x64\Debug\ai_techniques.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Coder\Documents\AITechniques\x64\Debug\ai_techniques.lib" /MACHINE:X64 x64\Debug\Behaviour.obj
          x64\Debug\main.obj
@@ -24,4 +29,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.60
+Time Elapsed 00:00:01.64

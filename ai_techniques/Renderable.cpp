@@ -58,7 +58,6 @@ void Renderable::LookAt(float x, float y)
 	float dx = x - this->x;
 	float dy = y - this->y;
 	rotation = 270.0f + atan2f(dy,dx) * 180.0f * M_1_PI;
-	std::cout << "Rotation: " << rotation << std::endl;
 }
 
 void Renderable::Update()
