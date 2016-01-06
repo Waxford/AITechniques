@@ -21,10 +21,11 @@ public:
 	std::vector<GLfloat> vertexBufferData;
 
 	Renderable(void);
-	~Renderable(void);
+	virtual ~Renderable(void);
 
 	void SetVertices(std::vector<GLfloat>* newVertexBufferData);
 	void SetColor(float r, float g, float b, float a);
+	void LookAt(float x, float y);
 
-	void Update();
+	virtual void Update();
 };

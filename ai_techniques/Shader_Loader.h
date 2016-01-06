@@ -9,10 +9,10 @@ namespace Core
 	class Shader_Loader
 	{
 	private:
-		static std::string ReadShader(char *filename);
+		static std::string ReadShader(std::string filename);
 		static GLuint CreateShader(GLenum shaderType,
 			std::string source,
-			char* shaderName);
+			std::string shaderName);
 
 	public:
 		static GLuint CreateProgram(char* VertexShaderFilename,

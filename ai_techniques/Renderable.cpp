@@ -1,5 +1,9 @@
+#define _USE_MATH_DEFINES
+
 #include "Renderable.h"
 #include "Shader_Loader.h"
+#include <cmath>
+#include <iostream>
 
 Renderable::Renderable(void) 
 {
@@ -17,6 +21,7 @@ Renderable::Renderable(void)
 Renderable::~Renderable(void) 
 {
 	std::cout << "Renderable <" << id << "> deconstructed" << std::endl;
+	glDeleteBuffers(1, &vertexbuffer);
 	glDeleteProgram(shader);
 }
 
@@ -46,6 +51,14 @@ void Renderable::SetColor(float r, float g, float b, float a) {
 	float colorArray[4] = {r, g, b, a};
 	GLint colorLoc = glGetUniformLocation(shader, "color");
 	glProgramUniform4fv(shader, colorLoc, 1, colorArray);
+}
+
+void Renderable::LookAt(float x, float y)
+{
+	float dx = x - this->x;
+	float dy = y - this->y;
+	rotation = 270.0f + atan2f(dy,dx) * 180.0f * M_1_PI;
+	std::cout << "Rotation: " << rotation << std::endl;
 }
 
 void Renderable::Update()

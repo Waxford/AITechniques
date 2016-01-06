@@ -141,19 +141,19 @@
   <ItemGroup>
     <ClCompile Include="Behaviour.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pather.cpp" />
     <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="Shader_Loader.cpp" />
     <ClCompile Include="BehaviourDirector.cpp" />
     <ClCompile Include="Time.cpp" />
-    <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Behaviour.h" />
+    <ClInclude Include="Pather.h" />
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="BehaviourDirector.h" />
     <ClInclude Include="Shader_Loader.h" />
     <ClInclude Include="Time.h" />
-    <ClInclude Include="Triangle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Fragment_Shader.glsl" />
