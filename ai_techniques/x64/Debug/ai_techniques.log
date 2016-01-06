@@ -1,0 +1,29 @@
+﻿Build started 1/5/2016 7:18:21 PM.
+     1>Project "C:\Users\Coder\Documents\AITechniques\ai_techniques\ai_techniques.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /Od /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc110.pdb" /Gd /TP /errorReport:prompt main.cpp
+         main.cpp
+     1>main.cpp(7): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+     1>main.cpp(8): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+     1>main.cpp(9): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+     1>main.cpp(10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Coder\Documents\AITechniques\x64\Debug\ai_techniques.exe" /INCREMENTAL /NOLOGO /LIBPATH:"Dependencies/freeglut,Dependencies/glew" opengl32.lib freeglut.lib glew32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Coder\Documents\AITechniques\x64\Debug\ai_techniques.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Coder\Documents\AITechniques\x64\Debug\ai_techniques.lib" /MACHINE:X64 x64\Debug\Behaviour.obj
+         x64\Debug\main.obj
+         x64\Debug\Renderable.obj
+         x64\Debug\Shader_Loader.obj
+         x64\Debug\BehaviourDirector.obj
+         x64\Debug\Time.obj
+         x64\Debug\Triangle.obj
+         ai_techniques.vcxproj -> C:\Users\Coder\Documents\AITechniques\x64\Debug\ai_techniques.exe
+       PostBuildEvent:
+         xcopy C:\Users\Coder\Documents\AITechniques\\ai_techniques\Dependencies\bin\x64\*.dll C:\Users\Coder\Documents\AITechniques\x64\Debug\ /Y
+         :VCEnd
+         C:\Users\Coder\Documents\AITechniques\\ai_techniques\Dependencies\bin\x64\freeglut.dll
+         C:\Users\Coder\Documents\AITechniques\\ai_techniques\Dependencies\bin\x64\glew32.dll
+         2 File(s) copied
+     1>Done Building Project "C:\Users\Coder\Documents\AITechniques\ai_techniques\ai_techniques.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.45

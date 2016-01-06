@@ -37,7 +37,9 @@ void renderScene(void)
 	t2->scaleX = sinf(time) + 1.2f;
 	t2->scaleY = sinf(time*3.0f)*2 + 2.5f;*/
 
-	r->rotation = time * 200.0f;
+	r->scaleX = sinf(time)*2 + 2.5f;
+	r->scaleY = sinf(time * 1.5f) + 1.2f;
+	r->SetColor(sin(time) * 0.5f + 0.5f, sin(time*1.1f) * 0.5f + 0.5f, sin(time*1.5f) * 0.5f + 0.5f, 1.0f);
 
 	t1->rotation = 0.0f + time * 100.0f;
 	t1->y = 0.75f;
@@ -97,7 +99,7 @@ int main(int argc, char **argv)
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(200, 200);
-	glutInitWindowSize(800, 600);
+	glutInitWindowSize(800, 800);
 	glutCreateWindow("AI Techniques");
 
 	glewInit();

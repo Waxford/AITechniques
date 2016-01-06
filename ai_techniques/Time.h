@@ -6,9 +6,9 @@ class Time : public Behaviour
 {
 private:
 	static Time* instance;
-	std::chrono::time_point<std::chrono::steady_clock> startTime;
-	std::chrono::time_point<std::chrono::steady_clock> currentTime;
-	std::chrono::time_point<std::chrono::steady_clock> lastTime;
+	std::chrono::high_resolution_clock::time_point startTime;
+	std::chrono::high_resolution_clock::time_point currentTime;
+	std::chrono::high_resolution_clock::time_point lastTime;
 public:
 	Time(void);
 	~Time(void);
