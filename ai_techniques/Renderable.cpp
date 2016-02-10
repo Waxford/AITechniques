@@ -5,22 +5,15 @@
 #include <cmath>
 #include <iostream>
 
-Renderable::Renderable(void) 
+Renderable::Renderable(void) : depth(0), x(0.0f), y(0.0f), rotation(0.0f), scaleX(1.0f), scaleY(1.0f)
 {
 	// Generate 1 buffer, put the resulting identifier in vertexbuffer
 	glGenBuffers(1, &vertexbuffer);
-	x = 0.0f;
-	y = 0.0f;
-	rotation = 0.0f;
-	scaleX = 1.0f;
-	scaleY = 1.0f;
 	shader = Core::Shader_Loader::CreateProgram("Vertex_Shader.glsl", "Fragment_Shader.glsl");
-	std::cout << "Renderable <" << id << "> constructed" << std::endl;
 }
 
 Renderable::~Renderable(void) 
 {
-	std::cout << "Renderable <" << id << "> deconstructed" << std::endl;
 	glDeleteBuffers(1, &vertexbuffer);
 	glDeleteProgram(shader);
 }

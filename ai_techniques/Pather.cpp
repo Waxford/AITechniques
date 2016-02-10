@@ -3,10 +3,8 @@
 #include <stdlib.h>
 #include <list>
 
-Pather::Pather(void) 
+Pather::Pather(void) : pathing(false), speed(0.008f)
 {
-	pathing = false;
-	speed = 0.008f;
 }
 
 Pather::~Pather(void)
