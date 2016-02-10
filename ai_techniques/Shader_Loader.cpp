@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <map>
 
 using namespace Core;
 
@@ -25,8 +26,18 @@ std::string Shader_Loader::ReadShader(std::string filename)
 	return shaderCode;
 }
 
+static bool init = false;
 GLuint Shader_Loader::CreateShader(GLenum shaderType, std::string source, std::string shaderName)
 {
+	if (!init)
+	{
+		//shaderMap = new std::map<std::string, GLuint>();
+		init = true;
+	}
+	//if (shaderMap->find(source.append(shaderName)) != shaderMap->end())
+	//{
+	//	return shaderMap->at(source.append(shaderName));
+	//}
 	int compile_result = 0;
 
 	GLuint shader = glCreateShader(shaderType);
@@ -47,6 +58,8 @@ GLuint Shader_Loader::CreateShader(GLenum shaderType, std::string source, std::s
 		std::cout << "ERROR compiling shader: " << shaderName << std::endl << &shader_log[0] << std::endl;
 		return 0;
 	}
+	//std::string key = source.append(shaderName);
+	//shaderMap->at(key) = shader;
 	return shader;
 }
 
