@@ -2,9 +2,10 @@
 
 #include "Dependencies\glew\glew.h"
 #include "Dependencies\freeglut\freeglut.h"
-#include "Behaviour.h"
 #include <iostream>
 #include <vector>
+
+class Behaviour;
 
 class BehaviourDirector
 {

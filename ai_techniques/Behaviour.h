@@ -1,9 +1,10 @@
 #pragma once
+#include<atomic>
 
 class Behaviour
 {
 protected:
-	static int nextId;
+	static std::atomic<int> nextId;
 	int id;
 
 public:
