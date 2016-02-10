@@ -1,11 +1,12 @@
 #include "Shader_Loader.h"
+#include <string>
 #include <iostream>
 #include <fstream>
 #include <vector>
 
 using namespace Core;
 
-std::string Shader_Loader::ReadShader(char *filename)
+std::string Shader_Loader::ReadShader(std::string filename)
 {
 	std::string shaderCode;
 	std::ifstream file(filename, std::ios::in);
@@ -24,7 +25,7 @@ std::string Shader_Loader::ReadShader(char *filename)
 	return shaderCode;
 }
 
-GLuint Shader_Loader::CreateShader(GLenum shaderType, std::string source, char* shaderName)
+GLuint Shader_Loader::CreateShader(GLenum shaderType, std::string source, std::string shaderName)
 {
 	int compile_result = 0;
 

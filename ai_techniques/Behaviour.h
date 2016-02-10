@@ -8,7 +8,7 @@ protected:
 
 public:
 	Behaviour(void);
-	~Behaviour(void);
+	virtual ~Behaviour(void);
 	virtual void Update();
 	int GetID();
 };

@@ -48,6 +48,9 @@
     <ClCompile Include="BehaviourDirector.cpp">
       <Filter>Source Files\Singletons</Filter>
     </ClCompile>
+    <ClCompile Include="Pather.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader_Loader.h">
@@ -67,6 +70,9 @@
     </ClInclude>
     <ClInclude Include="BehaviourDirector.h">
       <Filter>Source Files\Singletons</Filter>
+    </ClInclude>
+    <ClInclude Include="Pather.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
