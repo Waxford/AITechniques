@@ -129,16 +129,20 @@ Step* Pather::CalculateBFSPath(Tile* start, Tile* destination, bool diagonal)
 			neighbours = current->tile->diagonal_neighbours;
 			for (auto it = neighbours.begin(); it != neighbours.end(); ++it) {
 				if ((*it)->IsPathable() && explored.count(*it) == 0) {
-					Step* child = new Step();
-					child->tile = *it;
-					child->parent = current;
-					child->cost = current->cost + sqrt2;
-					current->children.push_back(child);
-					search_space.push_back(child);
-					explored.insert(*it);
-					if (*it == destination) {
-						last_step = child;
-						search_space.clear();
+					Tile* crossTile1 = grid->GetTileClosestToPosition((*it)->x, current->tile->y);
+					Tile* crossTile2 = grid->GetTileClosestToPosition(current->tile->x, (*it)->y);
+					if (crossTile1->IsPathable() && crossTile2->IsPathable()) {
+						Step* child = new Step();
+						child->tile = *it;
+						child->parent = current;
+						child->cost = current->cost + sqrt2;
+						current->children.push_back(child);
+						search_space.push_back(child);
+						explored.insert(*it);
+						if (*it == destination) {
+							last_step = child;
+							search_space.clear();
+						}
 					}
 				}
 			}
