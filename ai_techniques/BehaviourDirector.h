@@ -4,6 +4,8 @@
 #include "Dependencies\freeglut\freeglut.h"
 #include <iostream>
 #include <vector>
+#include <set>
+#include <unordered_map>
 
 class Behaviour;
 
@@ -11,7 +13,8 @@ class BehaviourDirector
 {
 private:
 	static BehaviourDirector* instance;
-	std::vector<Behaviour*> behaviours;
+	std::set<int> layers;
+	std::unordered_map<int,std::vector<Behaviour*>> behaviours;
 public:
 	BehaviourDirector(void);
 	~BehaviourDirector(void);
@@ -23,7 +26,8 @@ public:
 		}
 		return instance;
 	}
-	static void RegisterBehaviour(Behaviour*);
+	static void RegisterBehaviour(Behaviour*,int = 0);
 	static void DeRegisterBehaviour(Behaviour*);
+	static void ReorderBehaviour(Behaviour*, int);
 	static void Tick();
 };

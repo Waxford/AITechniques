@@ -6,26 +6,36 @@ BehaviourDirector* BehaviourDirector::instance;
 BehaviourDirector::BehaviourDirector(void) {}
 BehaviourDirector::~BehaviourDirector(void) {}
 
-void BehaviourDirector::RegisterBehaviour(Behaviour* behaviour)
+void BehaviourDirector::RegisterBehaviour(Behaviour* behaviour, int order)
 {
-	Instance()->behaviours.push_back(behaviour);
+	Instance()->layers.insert(order);
+	Instance()->behaviours[order].push_back(behaviour);
 }
 
 void BehaviourDirector::DeRegisterBehaviour(Behaviour* behaviour)
 {
-	for (int i = 0; i < Instance()->behaviours.size(); ++i)
+	for (int i = 0; i < Instance()->behaviours[behaviour->GetOrder()].size(); ++i)
 	{
-		if (Instance()->behaviours[i]->GetID() == behaviour->GetID())
+		if (Instance()->behaviours[behaviour->GetOrder()][i]->GetID() == behaviour->GetID())
 		{
-			Instance()->behaviours.erase(Instance()->behaviours.begin() + i);
+			Instance()->behaviours[behaviour->GetOrder()].erase(Instance()->behaviours[behaviour->GetOrder()].begin() + i);
 		}
 	}
 }
 
+void BehaviourDirector::ReorderBehaviour(Behaviour* behaviour, int order)
+{
+	DeRegisterBehaviour(behaviour);
+	RegisterBehaviour(behaviour, order);
+}
+
 void BehaviourDirector::Tick()
 {
-	for (int i = 0; i < Instance()->behaviours.size(); ++i)
+	for (auto it = Instance()->layers.begin(); it != Instance()->layers.end(); it++)
 	{
-		Instance()->behaviours[i]->Update();
+		for (int i = 0; i < Instance()->behaviours[*it].size(); ++i)
+		{
+			Instance()->behaviours[*it][i]->Update();
+		}
 	}
 }

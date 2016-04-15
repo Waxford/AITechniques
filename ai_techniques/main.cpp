@@ -2,6 +2,7 @@
 #include "Dependencies\freeglut\freeglut.h"
 #include "BehaviourDirector.h"
 #include "Pather.h"
+#include "Grid.h"
 #include "Time.h"
 #include <iostream>
 #include <stdio.h>;
@@ -16,7 +17,29 @@ using namespace Core;
 
 Pather* p;
 
-std::vector<Renderable*> grid;
+Grid* grid;
+
+int tileDefinition[] = {
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,
+	1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 };
 
 void renderScene(void)
 {
@@ -39,6 +62,8 @@ void Init()
 
 	glutSetColor(0, 1, 0, 0);
 
+	grid = new Grid(tileDefinition, 20, 20);
+
 	GLfloat walkerArray[] = {
 		-0.05f, -0.05f, 0.0f,
 		0.0f, 0.0f, 0.0f,
@@ -54,33 +79,18 @@ void Init()
 	p->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
 	p->scaleX = 0.5f;
 	p->scaleY = 0.5f;
-	for (int i = 0; i < 10; ++i)
-	{
-		p->AddDestination(static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 2 - 1, static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * 2 - 1, 0.01);
-	}
-	
-	GLfloat squareArray[] = {
-		-0.05f, -0.05f, 0.0f,
-		0.05f, -0.05f, 0.0f,
-		-0.05f, 0.05f, 0.0f,
-		-0.05f, 0.05f, 0.0f,
-		0.05f, -0.05f, 0.0f,
-		0.05f, 0.05f, 0.0f,
-	};
-	std::vector<GLfloat> squareVerts(squareArray, squareArray + sizeof(squareArray) / sizeof(squareArray[0]));
-
-	for (int i = 0; i < 20; ++i) {
-		for (int j = 0; j < 20; ++j) {
-			Renderable* gridTile = new Renderable();
-			gridTile->SetVertices(&squareVerts);
-			gridTile->x = (i - 9.5f) / 10.0f;
-			gridTile->y = (j - 9.5f) / 10.0f;
-			gridTile->scaleX = .95f;
-			gridTile->scaleY = .95f;
-			gridTile->SetColor(0.0f, 0.0f, 0.0f, 1.0f);
-			grid.push_back(gridTile);
-		}
-	}
+	Tile* startTile = grid->GetTile(10, 15);
+	p->x = startTile->x;
+	p->y = startTile->y;
+	p->SetOrder(-1);
+	p->SetGrid(grid);
+	p->SetDestination(8, 2, false);
+	p->SetDestination(10,15, false);
+	p->SetDestination(8, 2, true);
+	//for (int i = 0; i < 10; ++i)
+	//{
+	//	p->AddDestination(static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 2 - 1, static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * 2 - 1, 0.01);
+	//}
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
