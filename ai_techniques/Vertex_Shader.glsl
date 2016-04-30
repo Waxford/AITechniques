@@ -1,12 +1,8 @@
-#version 430 core
-
-layout(std140 uniform Matrices{
-	mat4 pvm;
-};
+#version 140 core
 
 in vec4 position;
 
 void main(void)
 {
-    gl_Position = pvm * position;
+    gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * position;
 }

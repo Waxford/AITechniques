@@ -1,13 +1,15 @@
 #include "Pather.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <list>
 #include <cmath>
+#include <limits>
+#include <list>
+#include <set>
 #include <unordered_set>
 
 static int sqrt2 = 1.41421356237f;
 
-Pather::Pather(void) : pathing(false), speed(0.008f), waypoint_radius(0.01f)
+Pather::Pather(void) : pathing(false), speed(0.003f), waypoint_radius(0.01f)
 {
 }
 
@@ -44,8 +46,9 @@ void Pather::Update()
 	}
 	else {
 		Tile* random_tile = grid->GetTile(rand() % 20, rand() % 20);
-		if (random_tile->IsPathable())
+		if (random_tile->IsPathable()) {
 			SetDestination(random_tile, true);
+		}
 	}
 }
 
@@ -73,6 +76,7 @@ void Pather::SetDestination(int x, int y, bool diagonal)
 	SetDestination(grid->GetTile(x, y), diagonal);
 }
 
+int evaluated_tiles = 0;
 void Pather::SetDestination(Tile* dest, bool diagonal) {
 	if (!grid)
 		return;
@@ -89,7 +93,9 @@ void Pather::SetDestination(Tile* dest, bool diagonal) {
 	else {
 		start = path.back();
 	}
-	Step* last_step = CalculateBFSPath(start, destination, diagonal);
+	evaluated_tiles = 0;
+	Step* last_step = CalculateAStarPath(start, destination, diagonal);
+	std::cout << "Evaluated Tiles: " << evaluated_tiles << std::endl;
 	std::list<Tile*> solution;
 	while (last_step->parent != last_step) {
 		solution.push_front(last_step->tile);
@@ -117,6 +123,7 @@ Step* Pather::CalculateBFSPath(Tile* start, Tile* destination, bool diagonal)
 	std::vector<Tile*> neighbours;
 
 	while (search_space.size() > 0) {
+		evaluated_tiles++;
 		Step* current = search_space.front();
 		search_space.pop_front();
 		neighbours = current->tile->neighbours;
@@ -159,4 +166,93 @@ Step* Pather::CalculateBFSPath(Tile* start, Tile* destination, bool diagonal)
 		}
 	}
 	return last_step;
+}
+
+Step* Pather::CalculateAStarPath(Tile* start, Tile* destination, bool diagonal) 
+{
+	std::unordered_set<Tile*> visited;
+	std::set<Tile*> frontier;
+	frontier.insert(start);
+	std::map<Tile*, Tile*> cameFrom;
+	std::vector<float> gScore;
+	std::vector<float> fScore;
+	for (int i = 0; i < grid->Width()*grid->Height(); ++i) {
+		gScore.push_back(std::numeric_limits<float>::max());
+		fScore.push_back(std::numeric_limits<float>::max());
+	}
+	gScore[grid->GetTileIndex(start)] = 0;
+	fScore[grid->GetTileIndex(start)] = EstimateHeuristicCost(start, destination);
+	Tile* current;
+	while (frontier.size() > 0) {
+		evaluated_tiles++;
+		current = *frontier.begin();
+		float cost = fScore[grid->GetTileIndex(current)];
+		for (auto it = frontier.begin(); it != frontier.end(); ++it) {
+			float compareCost = fScore[grid->GetTileIndex(*it)];
+			if (compareCost < cost) {
+				current = *it;
+				cost = compareCost;
+			}
+		}
+		if (current == destination) {
+			return ReconstructPath(cameFrom, current);
+		}
+		frontier.erase(current);
+		visited.insert(current);
+		std::vector<Tile*> neighbours;
+		for (auto it = current->neighbours.begin(); it != current->neighbours.end(); ++it) {
+			neighbours.push_back(*it);
+		}
+		if (diagonal) {
+			for (auto it = current->diagonal_neighbours.begin(); it != current->diagonal_neighbours.end(); ++it) {
+				Tile* crossTile1 = grid->GetTileClosestToPosition((*it)->x, current->y);
+				Tile* crossTile2 = grid->GetTileClosestToPosition(current->x, (*it)->y);
+				if (crossTile1->IsPathable() && crossTile2->IsPathable()) {
+					neighbours.push_back(*it);
+				}
+			}
+		}
+		for (auto it = neighbours.begin(); it != neighbours.end(); it++) 
+		{
+			if (visited.count(*it) > 0 || !(*it)->IsPathable()) {
+				continue;
+			}
+			float tentative_gScore = gScore[grid->GetTileIndex(current)] + EstimateHeuristicCost(current, *it);
+			float tentative_fScore = tentative_gScore + EstimateHeuristicCost(*it, destination);
+			if (frontier.count(*it) > 0 && fScore[grid->GetTileIndex(*it)] < tentative_fScore) {
+				continue;
+			}
+			if (visited.count(*it) > 0 && fScore[grid->GetTileIndex(*it)] < tentative_fScore) {
+				continue;
+			}
+			cameFrom[*it] = current;
+			gScore[grid->GetTileIndex(*it)] = tentative_gScore;
+			fScore[grid->GetTileIndex(*it)] = tentative_fScore;
+			frontier.insert(*it);
+		}
+	}
+}
+
+float Pather::EstimateHeuristicCost(Tile* current, Tile* destination) 
+{
+	float dx = abs(current->x - destination->x);
+	float dy = abs(current->y - destination->y);
+	return sqrt(dx*dx + dy*dy);
+}
+
+Step* Pather::ReconstructPath(std::map<Tile*,Tile*> cameFrom, Tile* current) 
+{
+	Step* step = new Step();
+	step->tile = current;
+	Step* lastStep = step;
+	while (cameFrom.count(current) > 0) {
+		current = cameFrom[current];
+		Step* prevStep = new Step();
+		prevStep->tile = current;
+		step->parent = prevStep;
+		prevStep->children.push_back(step);
+		step = prevStep;
+	}
+	step->parent = step;
+	return lastStep;
 }

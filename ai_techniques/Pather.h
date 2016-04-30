@@ -2,6 +2,7 @@
 #include "Renderable.h"
 #include "Grid.h"
 #include <list>
+#include <map>
 #include <vector>
 
 class Step {
@@ -22,6 +23,10 @@ private:
 	std::list<Tile*> path;
 	Grid* grid;
 	Step* CalculateBFSPath(Tile*,Tile*,bool);
+	Step* CalculateAStarPath(Tile*, Tile*, bool);
+	float EstimateHeuristicCost(Tile*, Tile*);
+	Step* ReconstructPath(std::map<Tile*,Tile*>, Tile*);
+
 
 public:
 	Pather(void);

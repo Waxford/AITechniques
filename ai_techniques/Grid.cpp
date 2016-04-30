@@ -75,6 +75,14 @@ Tile* Grid::GetTileClosestToPosition(float x, float y)
 	return GetTile(std::round(x), std::round(y));
 }
 
+int Grid::GetTileIndex(Tile* tile) {
+	for (int i = 0; i < width * height; ++i) {
+		if (tiles[i] == tile)
+			return i;
+	}
+	return -1;
+}
+
 int Grid::Width() {
 	return width;
 }

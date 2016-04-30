@@ -1,6 +1,6 @@
 #include "Tile.h"
+#include "Time.h"
 #include <stdio.h>
-
 
 Tile::Tile(bool pathable)
 {
@@ -16,6 +16,10 @@ Tile::Tile(bool pathable)
 
 Tile::~Tile()
 {
+}
+
+void Tile::Update() {
+	Renderable::Update();
 }
 
 bool Tile::IsPathable() {

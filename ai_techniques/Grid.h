@@ -13,6 +13,7 @@ public:
 	std::vector<Tile*> tiles;
 	Tile* GetTile(int, int);
 	Tile* GetTileClosestToPosition(float, float);
+	int GetTileIndex(Tile*);
 	int Width();
 	int Height();
 };

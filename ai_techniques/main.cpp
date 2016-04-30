@@ -42,19 +42,35 @@ int tileDefinition[] = {
 	0,0,0,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0 };
 
+float frameTimes[10];
+int frameIndex = 0;
+bool debugFrameTime = false;
 void renderScene(void)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glClearColor(0.3, 0.3, 0.1, 1.0);
 
 	BehaviourDirector::Tick();
-
+	if (frameIndex++ == 9) {
+		float avg = 0;
+		for (int i = 0; i < 10; ++i) {
+			avg += frameTimes[i];
+			avg /= 10;
+		}
+		if(debugFrameTime)
+			std::cout << "Frame time: " << avg << std::endl;
+		frameIndex = 0;
+	}
+	frameTimes[frameIndex] = Time::GetDeltaTime();
 	glutSwapBuffers();
 	glutPostRedisplay();
 }
 
 void Init()
 {
+	for (int i = 0; i < 10; ++i) {
+		frameTimes[i] = 0.0f;
+	}
 	glEnable(GL_DEPTH_TEST);
 
 	//load and compile shaders
@@ -97,8 +113,8 @@ int main(int argc, char **argv)
 {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-	glutInitWindowPosition(200, 200);
-	glutInitWindowSize(800, 800);
+	glutInitWindowPosition(100, 50);
+	glutInitWindowSize(600, 600);
 	glutCreateWindow("AI Techniques");
 
 	glewInit();

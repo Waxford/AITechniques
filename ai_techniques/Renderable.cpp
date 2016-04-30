@@ -45,9 +45,10 @@ void Renderable::SetColor(float r, float g, float b, float a) {
 	this->g = g;
 	this->b = b;
 	this->a = a;
-	float colorArray[4] = {r, g, b, a};
+	GLfloat colorArray[4] = {r, g, b, a};
 	GLint colorLoc = glGetUniformLocation(shader, "color");
-	glProgramUniform4fv(shader, colorLoc, 1, colorArray);
+	glUseProgram(shader);
+	glUniform4fv(colorLoc, 1, colorArray);
 }
 
 void Renderable::LookAt(float x, float y)
