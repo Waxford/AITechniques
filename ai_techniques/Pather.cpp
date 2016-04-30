@@ -7,7 +7,7 @@
 
 static int sqrt2 = 1.41421356237f;
 
-Pather::Pather(void) : pathing(false), speed(0.0028f)
+Pather::Pather(void) : pathing(false), speed(0.008f), waypoint_radius(0.01f)
 {
 }
 
@@ -25,13 +25,12 @@ void Pather::Update()
 		float dx = destination->x - x;
 		float dy = destination->y - y;
 		float dist = sqrtf(dx*dx + dy*dy);
-		if (dist <= destination->r)
+		if (dist <= waypoint_radius)
 		{
 			x = destination->x;
 			y = destination->y;
 			pathing = false;
 			path.pop_front();
-			free(destination);
 			if (path.size() > 0)
 			{
 				destination = path.front();
@@ -43,18 +42,24 @@ void Pather::Update()
 			y += (dy / dist) * speed;
 		}
 	}
+	else {
+		Tile* random_tile = grid->GetTile(rand() % 20, rand() % 20);
+		if (random_tile->IsPathable())
+			SetDestination(random_tile, true);
+	}
 }
 
-void Pather::AddDestination(float x, float y, float r)
+void Pather::AddWaypoint(float x, float y)
 {
-	Destination* newDestination = new Destination();
-	newDestination->x = x;
-	newDestination->y = y;
-	newDestination->r = r;
-	path.push_back(newDestination);
+	Tile* point = grid->GetTileClosestToPosition(x,y);
+	AddWaypoint(point);
+}
+
+void Pather::AddWaypoint(Tile* point) {
+	path.push_back(point);
 	if (path.size() == 1)
 	{
-		destination = newDestination;
+		destination = point;
 	}
 }
 
@@ -65,17 +70,24 @@ void Pather::SetGrid(Grid* grid)
 
 void Pather::SetDestination(int x, int y, bool diagonal)
 {
+	SetDestination(grid->GetTile(x, y), diagonal);
+}
+
+void Pather::SetDestination(Tile* dest, bool diagonal) {
 	if (!grid)
 		return;
-	Tile* destination = grid->GetTile(x, y);
-	grid->GetTile(x,y)->Recolour(0.3f, 0.8f, 0.3f, 1.0f);
+
+	if (destination)
+		destination->Recolour(0.0f, 0.0f, 0.0f, 1.0f);
+
+	destination = dest;
+	destination->Recolour(this->r, this->g, this->b, this->a);
 	Tile* start;
 	if (path.size() == 0) {
 		start = grid->GetTileClosestToPosition(this->x, this->y);
 	}
 	else {
-		Destination* d = path.back();
-		start = grid->GetTileClosestToPosition(d->x, d->y);
+		start = path.back();
 	}
 	Step* last_step = CalculateBFSPath(start, destination, diagonal);
 	std::list<Tile*> solution;
@@ -85,14 +97,12 @@ void Pather::SetDestination(int x, int y, bool diagonal)
 	}
 	solution.push_front(last_step->tile);
 	for (auto it = solution.begin(); it != solution.end(); ++it) {
-		std::cout << "Step" << (*it)->x << "," << (*it)->y << std::endl;
-		AddDestination((*it)->x, (*it)->y, 0.01f);
+		AddWaypoint((*it));
 	}
 }
 
 Step* Pather::CalculateBFSPath(Tile* start, Tile* destination, bool diagonal)
 {
-	std::cout << "Start: " << start->x << "," << start->y << " === End: " << destination->x << "," << destination->y << std::endl;
 	Step* first_step = new Step();
 	first_step->tile = start;
 	first_step->parent = first_step;

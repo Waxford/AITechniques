@@ -16,26 +16,27 @@
 using namespace Core;
 
 Pather* p;
+static int number_of_pathers = 1;
 
 Grid* grid;
 
 int tileDefinition[] = {
-	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
-	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
-	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
-	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
-	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
-	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
-	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,
+	0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,
+	0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,
+	0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,
+	0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,
+	0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,
+	0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,
+	1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,
+	0,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,
+	0,0,1,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,
+	0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,
+	0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,
 	0,0,0,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,0,0,
@@ -44,7 +45,7 @@ int tileDefinition[] = {
 void renderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.8, 0.8, 0.3, 1.0);
+	glClearColor(0.3, 0.3, 0.1, 1.0);
 
 	BehaviourDirector::Tick();
 
@@ -74,23 +75,20 @@ void Init()
 	};
 	std::vector<GLfloat> walkerVerts(walkerArray, walkerArray + sizeof(walkerArray) / sizeof(walkerArray[0]));
 
-	p = new Pather();
-	p->SetVertices(&walkerVerts);
-	p->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-	p->scaleX = 0.5f;
-	p->scaleY = 0.5f;
-	Tile* startTile = grid->GetTile(10, 15);
-	p->x = startTile->x;
-	p->y = startTile->y;
-	p->SetOrder(-1);
-	p->SetGrid(grid);
-	p->SetDestination(8, 5, true);
-	p->SetDestination(0,15, true);
-	p->SetDestination(11, 8, true);
-	//for (int i = 0; i < 10; ++i)
-	//{
-	//	p->AddDestination(static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 2 - 1, static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * 2 - 1, 0.01);
-	//}
+	Tile* startTile;
+
+	for (int i = 0; i < number_of_pathers; ++i) {
+		p = new Pather();
+		p->SetVertices(&walkerVerts);
+		p->SetColor((double)rand() / (RAND_MAX), (double)rand() / (RAND_MAX), (double)rand() / (RAND_MAX), 1.0f);
+		p->scaleX = 0.5f;
+		p->scaleY = 0.5f;
+		startTile = grid->GetTile(12, 15);
+		p->x = startTile->x;
+		p->y = startTile->y;
+		p->SetOrder(-1);
+		p->SetGrid(grid);
+	}
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

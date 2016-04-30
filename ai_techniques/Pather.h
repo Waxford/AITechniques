@@ -4,28 +4,22 @@
 #include <list>
 #include <vector>
 
-struct Destination
-{
-	float x;
-	float y;
-	float r;
-};
-
 class Step {
 public:
 	Step* parent;
-	Tile* tile;
 	std::vector<Step*> children;
+	Tile* tile;
 	float cost;
 };
 
 class Pather : public Renderable 
 {
 private:
-	float speed;
-	Destination* destination;
-	std::list<Destination*> path;
 	bool pathing;
+	float speed;
+	float waypoint_radius;
+	Tile* destination;
+	std::list<Tile*> path;
 	Grid* grid;
 	Step* CalculateBFSPath(Tile*,Tile*,bool);
 
@@ -33,7 +27,9 @@ public:
 	Pather(void);
 	virtual ~Pather(void);
 	virtual void Update();
-	void AddDestination(float x, float y, float r);
+	void AddWaypoint(float x, float y);
+	void AddWaypoint(Tile*);
 	void SetGrid(Grid*);
 	void SetDestination(int, int, bool);
+	void SetDestination(Tile*, bool);
 };

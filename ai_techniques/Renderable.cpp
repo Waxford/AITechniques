@@ -41,6 +41,10 @@ void Renderable::SetVertices(std::vector<GLfloat>* newVertexBufferData) {
 }
 
 void Renderable::SetColor(float r, float g, float b, float a) {
+	this->r = r;
+	this->g = g;
+	this->b = b;
+	this->a = a;
 	float colorArray[4] = {r, g, b, a};
 	GLint colorLoc = glGetUniformLocation(shader, "color");
 	glProgramUniform4fv(shader, colorLoc, 1, colorArray);

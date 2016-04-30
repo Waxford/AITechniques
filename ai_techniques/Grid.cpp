@@ -72,7 +72,6 @@ Tile* Grid::GetTileClosestToPosition(float x, float y)
 	y += 0.95;
 	y *= 0.5f;
 	y *= height;
-
 	return GetTile(std::round(x), std::round(y));
 }
 

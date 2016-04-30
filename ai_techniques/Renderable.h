@@ -17,6 +17,10 @@ public:
 	float rotation;
 	float scaleX;
 	float scaleY;
+	float r;
+	float g;
+	float b;
+	float a;
 	GLuint shader; 
 	std::vector<GLfloat> vertexBufferData;
 

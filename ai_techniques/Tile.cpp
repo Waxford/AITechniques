@@ -24,6 +24,5 @@ bool Tile::IsPathable() {
 
 void Tile::Recolour(float r, float g, float b, float a)
 {
-	std::cout << "Recolour!" << std::endl;
 	this->SetColor(r, g, b, a);
 }
