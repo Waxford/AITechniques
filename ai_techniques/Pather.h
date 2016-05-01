@@ -24,7 +24,8 @@ private:
 	Grid* grid;
 	Step* CalculateBFSPath(Tile*,Tile*,bool);
 	Step* CalculateAStarPath(Tile*, Tile*, bool);
-	float EstimateHeuristicCost(Tile*, Tile*);
+	float CalculateDistance(Tile*, Tile*);
+	float EstimateHeuristicCost(Tile*, Tile*, bool);
 	Step* ReconstructPath(std::map<Tile*,Tile*>, Tile*);
 
 

@@ -20,6 +20,9 @@ Grid::Grid(int definition[], int width, int height)
 	for (int i = height - 1; i >= 0; --i) {
 		for (int j = 0; j < width; ++j) {
 			Tile* gridTile = new Tile(definition[j + (height * i)] == 0);
+			gridTile->id = j + height * i;
+			gridTile->indexX = height - i;
+			gridTile->indexY = j;
 			gridTile->SetVertices(&squareVerts);
 			gridTile->x = (j - 9.5f) / 10.0f;
 			gridTile->y = (9.5f - i) / 10.0f;
@@ -73,14 +76,6 @@ Tile* Grid::GetTileClosestToPosition(float x, float y)
 	y *= 0.5f;
 	y *= height;
 	return GetTile(std::round(x), std::round(y));
-}
-
-int Grid::GetTileIndex(Tile* tile) {
-	for (int i = 0; i < width * height; ++i) {
-		if (tiles[i] == tile)
-			return i;
-	}
-	return -1;
 }
 
 int Grid::Width() {

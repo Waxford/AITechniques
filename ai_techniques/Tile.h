@@ -7,6 +7,9 @@ class Tile :
 private:
 	bool pathable;
 public:
+	int id;
+	int indexX;
+	int indexY;
 	Tile(bool);
 	~Tile();
 	bool IsPathable();
