@@ -1,6 +1,9 @@
 #pragma once
 #include "Renderable.h"
 #include <vector>
+
+class Grid;
+
 class Tile :
 	public Renderable
 {
@@ -10,6 +13,7 @@ public:
 	int id;
 	int indexX;
 	int indexY;
+	Grid* grid;
 	Tile(bool);
 	~Tile();
 	bool IsPathable();
@@ -17,4 +21,5 @@ public:
 	virtual void Update();
 	std::vector<Tile*> neighbours;
 	std::vector<Tile*> diagonal_neighbours;
+	std::string ToString();
 };

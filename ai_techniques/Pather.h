@@ -2,6 +2,7 @@
 #include "Renderable.h"
 #include "Grid.h"
 #include <list>
+#include <set>
 #include <map>
 #include <vector>
 
@@ -19,23 +20,34 @@ private:
 	bool pathing;
 	float speed;
 	float waypoint_radius;
-	Tile* destination;
+	float collider_radius;
+	float forceX;
+	float forceY;
+	Tile* goal;
 	std::list<Tile*> path;
 	Grid* grid;
 	Step* CalculateBFSPath(Tile*,Tile*,bool);
 	Step* CalculateAStarPath(Tile*, Tile*, bool);
+	Step* CalculateMappedPath(Tile*, Tile*, bool);
 	float CalculateDistance(Tile*, Tile*);
-	float EstimateHeuristicCost(Tile*, Tile*, bool);
-	Step* ReconstructPath(std::map<Tile*,Tile*>, Tile*);
+	static float EstimateHeuristicCost(Tile*, Tile*, bool);
+	static Step* ReconstructPath(std::map<Tile*,Tile*>, Tile*);
 
 
 public:
+	static std::set<Pather*> g_all_pathers;
+
 	Pather(void);
 	virtual ~Pather(void);
-	virtual void Update();
+	virtual void Update() override;
+	virtual void LateUpdate() override;
 	void AddWaypoint(float x, float y);
 	void AddWaypoint(Tile*);
 	void SetGrid(Grid*);
 	void SetDestination(int, int, bool);
 	void SetDestination(Tile*, bool);
+	void AddForce(float x, float y);
+	float GetColliderRadius();
+
+	static Step* CalculateAStarPathGlobal(Grid*, Tile*, Tile*, bool);
 };

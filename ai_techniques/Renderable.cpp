@@ -55,7 +55,7 @@ void Renderable::LookAt(float x, float y)
 {
 	float dx = x - this->x;
 	float dy = y - this->y;
-	rotation = 270.0f + atan2f(dy, dx) * 180.0f * M_1_PI;
+	rotation = 270.0f + atan2f(dy, dx) * 180.0f * (float)M_1_PI;
 }
 
 void Renderable::Update()
@@ -89,7 +89,7 @@ void Renderable::Update()
 		);
 
 	// Draw the triangle
-	glDrawArrays(GL_TRIANGLES, 0, vertexBufferData.size()/3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+	glDrawArrays(GL_TRIANGLES, 0, (GLsizei)(vertexBufferData.size()/3)); // Starting from vertex 0; 3 vertices total -> 1 triangle
 
 	glPopMatrix();
 

@@ -38,4 +38,11 @@ void BehaviourDirector::Tick()
 			Instance()->behaviours[*it][i]->Update();
 		}
 	}
+	for (auto it = Instance()->layers.begin(); it != Instance()->layers.end(); it++)
+	{
+		for (int i = 0; i < Instance()->behaviours[*it].size(); ++i)
+		{
+			Instance()->behaviours[*it][i]->LateUpdate();
+		}
+	}
 }

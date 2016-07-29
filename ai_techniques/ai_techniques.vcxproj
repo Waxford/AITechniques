@@ -151,8 +151,16 @@
     <ClInclude Include="Triangle.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Fragment_Shader.glsl" />
-    <None Include="Vertex_Shader.glsl" />
+    <EmbeddedResource Include="Fragment_Shader.glsl">
+      <FileType>Document</FileType>
+      <LogicalName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Fragment_Shader.glsl</LogicalName>
+      <LogicalName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Fragment_Shader.glsl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Vertex_Shader.glsl">
+      <FileType>Document</FileType>
+      <LogicalName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex_Shader.glsl</LogicalName>
+      <LogicalName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex_Shader.glsl</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

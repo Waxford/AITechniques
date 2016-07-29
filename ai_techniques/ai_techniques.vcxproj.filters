@@ -18,6 +18,7 @@
     </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{0edb1296-063c-4036-84f8-a10c5907c42b}</UniqueIdentifier>
+      <Extensions>.glsl</Extensions>
     </Filter>
     <Filter Include="Source Files\Singletons">
       <UniqueIdentifier>{0d46cc16-27c3-4091-b60d-cbab1243f812}</UniqueIdentifier>
@@ -88,11 +89,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Vertex_Shader.glsl">
+    <EmbeddedResource Include="Vertex_Shader.glsl">
       <Filter>Shaders</Filter>
-    </None>
-    <None Include="Fragment_Shader.glsl">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Fragment_Shader.glsl">
       <Filter>Shaders</Filter>
-    </None>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
