@@ -58,6 +58,17 @@ void Tile::Recolour(float r, float g, float b, float a)
 	this->SetColor(r, g, b, a);
 }
 
+float Tile::GetCongestion() 
+{
+	float congestion_score = 0.0f;
+	for (auto it = Pather::g_all_pathers.begin(); it != Pather::g_all_pathers.end(); ++it) {
+		if (abs((*it)->x - x) + abs((*it)->y - y) < 0.1f) {
+			congestion_score += 1.0f;
+		}
+	}
+	return congestion_score * congestion_score;
+}
+
 std::string Tile::ToString() {
 	return indexX + "," + indexY;
 }

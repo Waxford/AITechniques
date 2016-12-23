@@ -14,6 +14,14 @@ public:
 	float cost;
 };
 
+enum PathingType
+{
+	BFS = 0,
+	ASTAR = 1,
+	MAPPED = 2,
+	CONGESTION = 3
+};
+
 class Pather : public Renderable 
 {
 private:
@@ -23,11 +31,13 @@ private:
 	float collider_radius;
 	float forceX;
 	float forceY;
+	float time_since_repath;
 	Tile* goal;
 	std::list<Tile*> path;
 	Grid* grid;
 	Step* CalculateBFSPath(Tile*,Tile*,bool);
 	Step* CalculateAStarPath(Tile*, Tile*, bool);
+	Step* CalculateCongestionPath(Tile*, Tile*, bool);
 	Step* CalculateMappedPath(Tile*, Tile*, bool);
 	float CalculateDistance(Tile*, Tile*);
 	static float EstimateHeuristicCost(Tile*, Tile*, bool);
@@ -36,6 +46,7 @@ private:
 
 public:
 	static std::set<Pather*> g_all_pathers;
+	PathingType pathing_type;
 
 	Pather(void);
 	virtual ~Pather(void);

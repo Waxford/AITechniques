@@ -1,4 +1,5 @@
 #include "Pather.h"
+#include "Time.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <algorithm>
@@ -14,8 +15,9 @@
 
 static float sqrt2 = 1.41421356237f;
 std::set<Pather*> Pather::g_all_pathers;
+static float repath_rate = 0.1f;
 
-Pather::Pather(void) : pathing(false), speed(0.002f), waypoint_radius(0.01f), collider_radius(0.02f)
+Pather::Pather(void) : pathing(false), speed(0.002f), waypoint_radius(0.01f), collider_radius(0.02f), pathing_type(PathingType::MAPPED), time_since_repath(0.0f)
 {
 	Pather::g_all_pathers.insert(this);
 }
@@ -34,6 +36,20 @@ void Pather::Update()
 		float dx = goal->x - x;
 		float dy = goal->y - y;
 		float dist = sqrtf(dx*dx + dy*dy);
+		Tile* end_goal = path.back();
+		time_since_repath += Time::GetDeltaTime();
+		if (time_since_repath >= repath_rate && end_goal)
+		{
+			Tile* new_start = nullptr;
+			path.clear();
+			SetDestination(end_goal, true);
+			time_since_repath = 0.0f;
+			if (path.size() > 1) 
+			{
+				path.pop_front();
+				goal = path.front();
+			}
+		}
 		if (dist <= waypoint_radius)
 		{
 			x = goal->x;
@@ -124,31 +140,60 @@ void Pather::SetDestination(Tile* destination, bool diagonal) {
 	}
 	evaluated_tiles = 0;
 	Step* last_step;
-	std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-	//last_step = CalculateBFSPath(start, goal, diagonal);
-	int bfs_eval_tiles = evaluated_tiles;
-	evaluated_tiles = 0;
-	std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
-	std::chrono::high_resolution_clock::time_point t3 = std::chrono::high_resolution_clock::now();
-	//last_step = CalculateAStarPath(start, goal, diagonal);
-	int a_star_eval_tiles = evaluated_tiles;
-	evaluated_tiles = 0;
-	std::chrono::high_resolution_clock::time_point t4 = std::chrono::high_resolution_clock::now();
-	std::chrono::high_resolution_clock::time_point t5 = std::chrono::high_resolution_clock::now();
-	last_step = CalculateMappedPath(start, goal, diagonal);
-	int mapped_eval_tiles = evaluated_tiles;
-	evaluated_tiles = 0;
-	std::chrono::high_resolution_clock::time_point t6 = std::chrono::high_resolution_clock::now();
+	switch(pathing_type)
+	{
+		case PathingType::BFS:
+		{
+			last_step = CalculateBFSPath(start, goal, diagonal);
+			int bfs_eval_tiles = evaluated_tiles;
+			evaluated_tiles = 0;
+			break;
+		}
+		case PathingType::ASTAR:
+		{
+			last_step = CalculateAStarPath(start, goal, diagonal);
+			int a_star_eval_tiles = evaluated_tiles;
+			evaluated_tiles = 0;
+			break;
+		}
+		case PathingType::MAPPED:
+		{
+			last_step = CalculateMappedPath(start, goal, diagonal);
+			int mapped_eval_tiles = evaluated_tiles;
+			evaluated_tiles = 0;
+			break;
+		}
+		case PathingType::CONGESTION:
+		{
+			last_step = CalculateCongestionPath(start, goal, diagonal);
+			int congestion_eval_tiles = evaluated_tiles;
+			evaluated_tiles = 0;
+			break;
+		}
+		default:
+		{
+			last_step = CalculateBFSPath(start, goal, diagonal);
+			int bfs_eval_tiles = evaluated_tiles;
+			evaluated_tiles = 0;
+			break;
+		}
+	}
+	//std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+	//std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+	//std::chrono::high_resolution_clock::time_point t3 = std::chrono::high_resolution_clock::now();
+	//std::chrono::high_resolution_clock::time_point t4 = std::chrono::high_resolution_clock::now();
+	//std::chrono::high_resolution_clock::time_point t5 = std::chrono::high_resolution_clock::now();
+	//std::chrono::high_resolution_clock::time_point t6 = std::chrono::high_resolution_clock::now();
 #ifdef DEBUG
-	std::cout << "------------STATS------------" << std::endl;
-	std::cout << "~Runtime~" << std::endl;
-	std::cout << "BFS:     " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << std::endl;
-	std::cout << "A*:      " << std::chrono::duration_cast<std::chrono::microseconds>(t4 - t3).count() << std::endl;
-	std::cout << "Mapped:  " << std::chrono::duration_cast<std::chrono::microseconds>(t6 - t5).count() << std::endl;
-	std::cout << "~Evaluated Tiles~" << std::endl;
-	std::cout << "BFS:     " << bfs_eval_tiles << std::endl;
-	std::cout << "A*:      " << a_star_eval_tiles << std::endl;
-	std::cout << "Mapped:  " << mapped_eval_tiles << std::endl;
+	//std::cout << "------------STATS------------" << std::endl;
+	//std::cout << "~Runtime~" << std::endl;
+	//std::cout << "BFS:     " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << std::endl;
+	//std::cout << "A*:      " << std::chrono::duration_cast<std::chrono::microseconds>(t4 - t3).count() << std::endl;
+	//std::cout << "Mapped:  " << std::chrono::duration_cast<std::chrono::microseconds>(t6 - t5).count() << std::endl;
+	//std::cout << "~Evaluated Tiles~" << std::endl;
+	//std::cout << "BFS:     " << bfs_eval_tiles << std::endl;
+	//std::cout << "A*:      " << a_star_eval_tiles << std::endl;
+	//std::cout << "Mapped:  " << mapped_eval_tiles << std::endl;
 #endif
 	std::list<Tile*> solution;
 	int stepcount = 0;
@@ -382,6 +427,158 @@ Step* Pather::CalculateAStarPath(Tile* start, Tile* destination, bool diagonal)
 		std::cout << "aStarStuff[" << evaluated_tiles << "]: " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << std::endl;
 #endif
 	}
+	return nullptr;
+}
+
+Step* Pather::CalculateCongestionPath(Tile* start, Tile* destination, bool diagonal)
+{
+	std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+	std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+#ifdef DEEP_DEBUG
+	t1 = std::chrono::high_resolution_clock::now();
+#endif
+	std::unordered_set<Tile*> visited;
+	std::unordered_set<Tile*> frontier;
+	frontier.insert(start);
+	std::map<Tile*, Tile*> cameFrom;
+	std::vector<float> gScore;
+	std::vector<float> fScore;
+#ifdef DEEP_DEBUG
+	t2 = std::chrono::high_resolution_clock::now();
+	std::cout << "Setup: " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << std::endl;
+	t1 = std::chrono::high_resolution_clock::now();
+#endif
+	for (int i = 0; i < grid->Width()*grid->Height(); ++i) {
+		gScore.push_back(std::numeric_limits<float>::max());
+		fScore.push_back(std::numeric_limits<float>::max());
+	}
+#ifdef DEEP_DEBUG
+	t2 = std::chrono::high_resolution_clock::now();
+	std::cout << "Iniialization: " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << std::endl;
+	t1 = std::chrono::high_resolution_clock::now();
+#endif
+	gScore[start->id] = 0;
+	fScore[start->id] = EstimateHeuristicCost(start, destination, diagonal) + start->GetCongestion();
+	Tile* current;
+#ifdef DEEP_DEBUG
+	t2 = std::chrono::high_resolution_clock::now();
+	std::cout << "Init Heuristic: " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << std::endl;
+#endif
+	std::vector<Tile*> neighbours = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+	std::vector<float> neighbourCosts = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+	while (frontier.size() > 0) {
+#ifdef DEEP_DEBUG
+		t1 = std::chrono::high_resolution_clock::now();
+#endif
+		evaluated_tiles++;
+		current = *frontier.begin();
+		float cost = fScore[current->id];
+		for (auto it = frontier.begin(); it != frontier.end(); ++it) {
+			float compareCost = fScore[(*it)->id];
+			if (compareCost < cost) {
+				current = *it;
+				cost = compareCost;
+			}
+		}
+#ifdef DEEP_DEBUG
+		t2 = std::chrono::high_resolution_clock::now();
+		std::cout << "tileSearch[" << evaluated_tiles << "]: " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << std::endl;
+#endif
+		if (current == destination) {
+			return ReconstructPath(cameFrom, current);
+		}
+#ifdef DEEP_DEBUG
+		t1 = std::chrono::high_resolution_clock::now();
+#endif
+		frontier.erase(current);
+		visited.insert(current);
+#ifdef DEEP_DEBUG
+		t2 = std::chrono::high_resolution_clock::now();
+		std::cout << "insert/delete[" << evaluated_tiles << "]: " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << std::endl;
+		t1 = std::chrono::high_resolution_clock::now();
+#endif
+		int neighbourCount = 0;
+		for (int i = 0; i < current->neighbours.size(); ++i) {
+			if (current->neighbours[i]->IsPathable()) {
+				neighbours[neighbourCount] = current->neighbours[i];
+				neighbourCosts[neighbourCount] = 1.0f;
+				++neighbourCount;
+			}
+		}
+		if (diagonal) {
+			for (int i = 0; i < current->diagonal_neighbours.size(); ++i) {
+				if (current->diagonal_neighbours[i]->IsPathable())
+				{
+					Tile* crossTile1 = grid->GetTileClosestToPosition(current->diagonal_neighbours[i]->x, current->y);
+					Tile* crossTile2 = grid->GetTileClosestToPosition(current->x, current->diagonal_neighbours[i]->y);
+					if (crossTile1->IsPathable() && crossTile2->IsPathable()) {
+						neighbours[neighbourCount] = current->diagonal_neighbours[i];
+						neighbourCosts[neighbourCount] = sqrt2;
+						++neighbourCount;
+					}
+				}
+			}
+		}
+#ifdef DEEP_DEBUG
+		t2 = std::chrono::high_resolution_clock::now();
+		std::cout << "neighbourGet[" << evaluated_tiles << "]: " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << std::endl;
+		t1 = std::chrono::high_resolution_clock::now();
+#endif
+		for (int i = 0; i < neighbourCount; ++i)
+		{
+			Tile* neighbour = neighbours[i];
+			if (visited.count(neighbour) > 0) {
+				continue;
+			}
+#ifdef DEEP_DEBUG
+			t1 = std::chrono::high_resolution_clock::now();
+#endif
+			float tentative_gScore = gScore[current->id] + neighbourCosts[i];
+			float tentative_fScore = tentative_gScore + EstimateHeuristicCost(neighbour, destination, diagonal) + neighbour->GetCongestion();
+#ifdef DEEP_DEBUG
+			t2 = std::chrono::high_resolution_clock::now();
+			std::cout << "estimation1[" << evaluated_tiles << "]: " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << std::endl;
+#endif
+			if (frontier.count(neighbour) > 0 && fScore[neighbour->id] < tentative_fScore) {
+				continue;
+			}
+			if (visited.count(neighbour) > 0 && fScore[neighbour->id] < tentative_fScore) {
+				continue;
+			}
+#ifdef DEEP_DEBUG
+			t1 = std::chrono::high_resolution_clock::now();
+#endif
+
+			cameFrom[neighbour] = current;
+#ifdef DEEP_DEBUG
+			t2 = std::chrono::high_resolution_clock::now();
+			std::cout << "estimation2[" << evaluated_tiles << "]: " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << std::endl;
+			t1 = std::chrono::high_resolution_clock::now();
+#endif
+			gScore[neighbour->id] = tentative_gScore;
+#ifdef DEEP_DEBUG
+			t2 = std::chrono::high_resolution_clock::now();
+			std::cout << "estimation3[" << evaluated_tiles << "]: " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << std::endl;
+			t1 = std::chrono::high_resolution_clock::now();
+#endif
+			fScore[neighbour->id] = tentative_fScore;
+#ifdef DEEP_DEBUG
+			t2 = std::chrono::high_resolution_clock::now();
+			std::cout << "estimation4[" << evaluated_tiles << "]: " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << std::endl;
+			t1 = std::chrono::high_resolution_clock::now();
+#endif
+			frontier.insert(neighbour);
+#ifdef DEEP_DEBUG
+			t2 = std::chrono::high_resolution_clock::now();
+			std::cout << "estimation5[" << evaluated_tiles << "]: " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << std::endl;
+#endif
+		}
+#ifdef DEEP_DEBUG
+		t2 = std::chrono::high_resolution_clock::now();
+		std::cout << "aStarStuff[" << evaluated_tiles << "]: " << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << std::endl;
+#endif
+	}
+	return nullptr;
 }
 
 Step* Pather::CalculateMappedPath(Tile* start, Tile* destination, bool diagonal) 
